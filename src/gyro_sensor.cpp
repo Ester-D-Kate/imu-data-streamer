@@ -3,6 +3,8 @@
 #include <EEPROM.h>
 #include <Wire.h>
 
+#include "eeprom_layout.h"
+
 namespace gyro {
 namespace {
 
@@ -21,8 +23,6 @@ static const uint8_t WHO_AM_I_MPU6500 = 0x70;
 
 static const uint32_t CALIBRATION_MAGIC = 0x4759524Fu;
 static const uint16_t CALIBRATION_VERSION = 2;
-static const size_t EEPROM_SIZE = 512;
-
 static uint8_t mpuAddr = 0xFF;
 static SensorInfo currentSensor = {0xFF, 0x00, SENSOR_UNKNOWN};
 
@@ -132,7 +132,7 @@ static bool readRawInternal(RawSample &sample) {
 }  // namespace
 
 bool sensorSetup(SensorInfo &sensor) {
-  EEPROM.begin(EEPROM_SIZE);
+  EEPROM.begin(appcfg::EEPROM_TOTAL_BYTES);
 
   Wire.begin(SDA_PIN, SCL_PIN);
   Wire.setClock(100000);
